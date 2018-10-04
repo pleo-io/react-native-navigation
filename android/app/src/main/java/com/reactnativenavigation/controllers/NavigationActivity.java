@@ -56,7 +56,8 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
      */
     static NavigationActivity currentActivity;
     private static Promise startAppPromise;
-
+    
+    private boolean killedBySystem = false;
     private ActivityParams activityParams;
     private ModalController modalController;
     private Layout layout;
@@ -69,6 +70,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
         if (!NavigationApplication.instance.getReactGateway().hasStartedCreatingContext() ||
                 getIntent() == null ||
                 getIntent().getBundleExtra("ACTIVITY_PARAMS_BUNDLE") == null) {
+            killedBySystem = true;
             SplashActivity.start(this);
             finish();
             return;
@@ -179,6 +181,7 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     @Override
     protected void onDestroy() {
+        if (killedBySystem) return; //this will prevent destroying the JS thread and then provoking deadlocks on SplashScreen
         destroyLayouts();
         destroyJsIfNeeded();
         NavigationApplication.instance.getActivityCallbacks().onActivityDestroyed(this);

@@ -48,7 +48,7 @@ public abstract class SplashActivity extends AppCompatActivity {
             NavigationApplication.instance.getEventEmitter().sendAppLaunchedEvent();
             if (NavigationApplication.instance.clearHostOnActivityDestroy(this)) {
                 overridePendingTransition(0, 0);
-                finish();
+                //finish(); //It prevents the splash screen to be shown when loading from a push if the app is killed and thus not opening the NavigationActivity
             }
             return;
         }
