@@ -181,9 +181,10 @@ public class NavigationActivity extends AppCompatActivity implements DefaultHard
 
     @Override
     protected void onDestroy() {
-        if (killedBySystem) return; //this will prevent destroying the JS thread and then provoking deadlocks on SplashScreen
-        destroyLayouts();
-        destroyJsIfNeeded();
+        if (!killedBySystem) { //this will prevent destroying the JS thread and then provoking deadlocks on SplashScreen
+            destroyLayouts();
+            destroyJsIfNeeded();
+        };
         NavigationApplication.instance.getActivityCallbacks().onActivityDestroyed(this);
         super.onDestroy();
     }
